@@ -111,6 +111,15 @@ class IndicatorsTransferWidget extends Gtk.Box {
             'changed::' + TRANSFER_INDICATORS_ID,
             this._updateIndicators.bind(this));
         this._updateIndicators();
+
+        this.connect('destroy', this._onDestroy.bind(this));
+    }
+
+    _onDestroy() {
+        if (this._changedTransferId) {
+            this._settings.disconnect(this._changedTransferId);
+            this._changedTransferId = 0;
+        }
     }
 
     _updateIndicators() {
@@ -210,7 +219,7 @@ class IndicatorsTransferWidget extends Gtk.Box {
 
         // Determine number of monitors for the upper bound.
         const display = Gdk.Display.get_default();
-        const nMonitors = display ? display.get_monitors().get_n_items() : 2;
+        const nMonitors = display ? display.get_monitors().get_n_items() : 1;
         dialog._adjustment = new Gtk.Adjustment({
             lower: 0.0,
             upper: Math.max(0, nMonitors - 1),

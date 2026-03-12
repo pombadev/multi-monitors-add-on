@@ -64,6 +64,8 @@ class MultiMonitorsAddOn {
         try {
             this._ov_settings = new Gio.Settings({ schema: OVERRIDE_SCHEMA });
         } catch (_e) {
+            global.log(`Multi Monitors Add-On: schema '${OVERRIDE_SCHEMA}' not found, ` +
+                       'skipping workspaces-only-on-primary check for overrides.');
             this._ov_settings = null;
         }
 

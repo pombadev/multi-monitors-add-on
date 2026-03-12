@@ -219,6 +219,8 @@ const MultiMonitorsThumbnailsBox = (() => {
                 this._onDragEnd.bind(this));
 
             // Use mutter schema for dynamic-workspaces setting.
+            // WorkspaceThumbnail.MUTTER_SCHEMA is a string constant; use
+            // nullish coalescing to guard against undefined (not empty string).
             const mutterSchema =
                 WorkspaceThumbnail.MUTTER_SCHEMA ?? 'org.gnome.mutter';
             this._mutterSettings = new Gio.Settings({
@@ -260,6 +262,10 @@ const MultiMonitorsThumbnailsBox = (() => {
             // Give the box a reference to the primary ControlsManager so that
             // any copied methods that access this._controls work correctly.
             this._controls = Main.overview._overview?._controls ?? null;
+            if (!this._controls) {
+                global.log('Multi Monitors Add-On: primary ControlsManager not ' +
+                           'found; some ThumbnailsBox methods may not function.');
+            }
 
             this.connect('destroy', this._onDestroy.bind(this));
         }
